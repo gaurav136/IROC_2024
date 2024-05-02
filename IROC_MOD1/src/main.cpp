@@ -2,7 +2,9 @@
 #include <Wire.h>
 #include <ArduinoJson.h>
 
-#define I2C_DEV_ADDR 0x55
+
+#define IROC_MOD2 0x02
+#define IROC_MOD3 0x03
 
 void setup() {
   Serial.begin(115200);
@@ -10,21 +12,33 @@ void setup() {
 }
 
 void loop() {
-  StaticJsonDocument<200> doc;
+  StaticJsonDocument<200> doc1;
+  StaticJsonDocument<200> doc2;
 
-  doc["sensor"] = "temperature";
-  doc["value"] = random(20, 30);
+  doc1["PWM"] = 255;
+  doc1["Direction"] = 1;
+
+  doc2["Angle"] = 90;
+  doc2["Distance"] =10;
 
   // JsonArray data = doc.createNestedArray("data");
   // data.add(48.756080);
   // data.add(2.302038);
 
-  size_t len = measureJson(doc);
-  uint8_t buffer[len];
-  serializeJson(doc, buffer, len);
+  size_t len1 = measureJson(doc1);
+  size_t len2 = measureJson(doc2);
+  uint8_t buffer1[len1];
+  uint8_t buffer2[len2];
 
-  Wire.beginTransmission(I2C_DEV_ADDR);
-  Wire.write(buffer, len);
+  serializeJson(doc1, buffer1, len1);
+  serializeJson(doc2, buffer2, len2);
+
+  Wire.beginTransmission(IROC_MOD2);
+  Wire.write(buffer1, len1);
+  Wire.endTransmission();
+
+  Wire.beginTransmission(IROC_MOD3);
+  Wire.write(buffer2, len2);
   Wire.endTransmission();
 
   delay(1000);

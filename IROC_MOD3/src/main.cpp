@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <ArduinoJson.h>
 
-#define SLAVE_ADDRESS 8
+#define IROC_MOD3 0x03
 
 #define MOTOR_PWM_PIN 5
 #define MOTOR_DIRECTION_PIN 4
@@ -30,6 +30,10 @@ void receiveEvent(int numBytes) {
   
   int pwmValue = doc["PWM"];
   int direction = doc["Direction"];
+  Serial.print("PWM :");
+  Serial.println(pwmValue);
+  Serial.print("Direction :");
+  Serial.println(direction);
 
   // Set PWM value for motor
   analogWrite(MOTOR_PWM_PIN, pwmValue);
@@ -39,8 +43,8 @@ void receiveEvent(int numBytes) {
 }
 
 void setup() {
-  Serial.begin(9600);
-  Wire.begin(SLAVE_ADDRESS);
+  Serial.begin(115200);
+  Wire.begin(IROC_MOD3);
   Wire.onReceive(receiveEvent);
 
   pinMode(MOTOR_PWM_PIN, OUTPUT);
