@@ -1,10 +1,11 @@
+#include <Arduino.h>
 #include <Wire.h>
 #include <ArduinoJson.h>
 
-#define IROC_MOD3 0x03
+#define IROC_MOD3 0x02
 
-#define MOTOR_PWM_PIN 5
-#define MOTOR_DIRECTION_PIN 4
+// #define MOTOR_PWM_PIN 5
+// #define MOTOR_DIRECTION_PIN 4
 
 void receiveEvent(int numBytes) {
   StaticJsonDocument<200> doc;
@@ -28,18 +29,20 @@ void receiveEvent(int numBytes) {
     return;
   }
   
-  int pwmValue = doc["PWM"];
-  int direction = doc["Direction"];
-  Serial.print("PWM :");
-  Serial.println(pwmValue);
-  Serial.print("Direction :");
-  Serial.println(direction);
-
-  // Set PWM value for motor
-  analogWrite(MOTOR_PWM_PIN, pwmValue);
   
-  // Set direction for motor
-  digitalWrite(MOTOR_DIRECTION_PIN, direction);
+
+  int servoAngle = doc["Angle"];
+  int ObjDis= doc["Distance"];
+  Serial.print("Angel :");
+  Serial.println(servoAngle);
+  Serial.print("Distance :");
+  Serial.println(ObjDis);
+
+  // // Set PWM value for motor
+  // analogWrite(MOTOR_PWM_PIN, pwmValue);
+  
+  // // Set direction for motor
+  // digitalWrite(MOTOR_DIRECTION_PIN, direction);
 }
 
 void setup() {
@@ -47,8 +50,8 @@ void setup() {
   Wire.begin(IROC_MOD3);
   Wire.onReceive(receiveEvent);
 
-  pinMode(MOTOR_PWM_PIN, OUTPUT);
-  pinMode(MOTOR_DIRECTION_PIN, OUTPUT);
+  // pinMode(MOTOR_PWM_PIN, OUTPUT);
+  // pinMode(MOTOR_DIRECTION_PIN, OUTPUT);
 }
 
 void loop() {

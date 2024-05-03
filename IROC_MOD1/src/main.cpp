@@ -3,8 +3,8 @@
 #include <ArduinoJson.h>
 
 
-#define IROC_MOD2 0x02
-#define IROC_MOD3 0x03
+#define IROC_MOD2 0x01
+#define IROC_MOD3 0x02
 
 void setup() {
   Serial.begin(115200);
@@ -25,8 +25,8 @@ void loop() {
   // data.add(48.756080);
   // data.add(2.302038);
 
-  size_t len1 = measureJson(doc1);
-  size_t len2 = measureJson(doc2);
+  size_t len1 = measureJson(doc1) +1;
+  size_t len2 = measureJson(doc2) +1;
   uint8_t buffer1[len1];
   uint8_t buffer2[len2];
 
